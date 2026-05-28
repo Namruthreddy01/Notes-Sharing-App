@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Sign up · Notes{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h1>Create account</h1>
+    <p class="muted">Sign up to upload and manage your PDFs.</p>
+
+    {% if error %}
+      <div class="alert alert--error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/signup" class="form">
+      <label class="label">
+        Full name
+        <input class="input" type="text" name="display_name" autocomplete="name" maxlength="120" />
+      </label>
+
+      <label class="label">
+        Email
+        <input class="input" type="email" name="email" autocomplete="email" required />
+      </label>
+
+      <label class="label">
+        Password <span class="muted">(6+ characters)</span>
+        <input class="input" type="password" name="password" autocomplete="new-password" minlength="6" required />
+      </label>
+
+      <div class="form-grid">
+        <label class="label">
+          Department
+          <input class="input" type="text" name="department" maxlength="120" />
+        </label>
+
+        <label class="label">
+          College
+          <input class="input" type="text" name="college" maxlength="160" />
+        </label>
+      </div>
+
+      <button class="button" type="submit">Sign up</button>
+    </form>
+
+    <p class="muted">
+      Already have an account? <a href="/login">Log in</a>.
+    </p>
+  </div>
+{% endblock %}

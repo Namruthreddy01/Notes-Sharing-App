@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Upload · Notes{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h1>Upload PDF</h1>
+    <p class="muted">Add a title, category details, and choose a PDF file.</p>
+
+    {% if error %}
+      <div class="alert alert--error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/upload" enctype="multipart/form-data" class="form">
+      <label class="label">
+        Title
+        <input class="input" type="text" name="title" placeholder="e.g. Calculus Unit 2" required />
+      </label>
+
+      <label class="label">
+        Description
+        <textarea class="input textarea" name="description" rows="3" placeholder="Short summary, exam focus, or important topics"></textarea>
+      </label>
+
+      <div class="form-grid">
+        <label class="label">
+          Department
+          <input class="input" type="text" name="note_department" value="{{ user.department or '' }}" maxlength="120" placeholder="e.g. Computer Science" />
+        </label>
+
+        <label class="label">
+          Subject
+          <input class="input" type="text" name="subject_name" maxlength="120" placeholder="e.g. Data Structures" />
+        </label>
+      </div>
+
+      <label class="label">
+        Unit
+        <input class="input" type="text" name="unit_name" maxlength="120" placeholder="e.g. Unit 3: Trees" />
+      </label>
+
+      <label class="label">
+        PDF file
+        <input class="input" type="file" name="pdf" accept="application/pdf,.pdf" required />
+      </label>
+
+      <div class="actions">
+        <button class="button" type="submit">Upload</button>
+        <a class="button button--secondary" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

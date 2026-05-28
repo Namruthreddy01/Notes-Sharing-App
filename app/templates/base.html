@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Notes Sharing App{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <a class="brand" href="/">Notes</a>
+        <nav class="nav">
+          {% if user %}
+            <a class="nav__link" href="/">Dashboard</a>
+            <a class="nav__link" href="/upload">Upload</a>
+            {% set profile_name = user.display_name or user.email.split("@")[0] %}
+            <a class="profile-chip" href="/profile" aria-label="Open profile">
+              <span class="profile-chip__avatar">{{ profile_name[:1]|upper }}</span>
+              <span class="profile-chip__text">
+                <span class="profile-chip__name">{{ profile_name }}</span>
+                <span class="profile-chip__meta">{{ user.department or "Profile" }}</span>
+              </span>
+            </a>
+            <form method="post" action="/logout" class="nav__form">
+              <button class="nav__button" type="submit">Logout</button>
+            </form>
+          {% else %}
+            <a class="nav__link" href="/login">Login</a>
+            <a class="nav__link" href="/signup">Sign up</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <span class="muted">Dashboard · Profile · Department notes</span>
+      </div>
+    </footer>
+  </body>
+</html>

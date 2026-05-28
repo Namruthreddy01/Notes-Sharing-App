@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title }} · Notes{% endblock %}
+
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>{{ note.title }}</h1>
+      <p class="muted">
+        {{ note.note_department or "General" }} · {{ note.subject_name or "Unsorted subject" }} · {{ note.unit_name or "Unsorted unit" }}
+      </p>
+    </div>
+    <div class="actions">
+      <a class="button button--secondary" href="/notes/{{ note.id }}/download">Download</a>
+      <a class="button button--secondary" href="/">Back</a>
+    </div>
+  </div>
+
+  <div class="card">
+    {% if note.description %}
+      <p>{{ note.description }}</p>
+    {% endif %}
+    <p class="muted">{{ note.original_filename }}</p>
+    <div class="pdf-frame">
+      <iframe
+        title="PDF preview"
+        src="/notes/{{ note.id }}/file"
+        loading="lazy"
+      ></iframe>
+    </div>
+    <p class="muted">
+      If the preview doesn’t load, use the <a href="/notes/{{ note.id }}/download">download link</a>.
+    </p>
+  </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Profile · Notes{% endblock %}
+
+{% block content %}
+  {% set profile_name = user.display_name or user.email.split("@")[0] %}
+  <div class="profile-layout">
+    <section class="profile-panel">
+      <div class="profile-hero">
+        <div class="profile-avatar">{{ profile_name[:1]|upper }}</div>
+        <div>
+          <h1>{{ profile_name }}</h1>
+          <p class="muted">{{ user.email }}</p>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ note_count }}</span>
+          <span class="profile-stat__label">PDF notes</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ user.department or "Not set" }}</span>
+          <span class="profile-stat__label">Department</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ user.college or "Not set" }}</span>
+          <span class="profile-stat__label">College</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Profile information</h2>
+      <p class="muted">This appears in the account area at the top corner.</p>
+
+      {% if saved %}
+        <div class="alert alert--success">Profile updated.</div>
+      {% endif %}
+
+      {% if error %}
+        <div class="alert alert--error">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" action="/profile" class="form">
+        <label class="label">
+          Full name
+          <input class="input" type="text" name="display_name" value="{{ user.display_name or '' }}" maxlength="120" autocomplete="name" />
+        </label>
+
+        <label class="label">
+          Department
+          <input class="input" type="text" name="department" value="{{ user.department or '' }}" maxlength="120" />
+        </label>
+
+        <label class="label">
+          College
+          <input class="input" type="text" name="college" value="{{ user.college or '' }}" maxlength="160" />
+        </label>
+
+        <div class="actions">
+          <button class="button" type="submit">Save profile</button>
+          <a class="button button--secondary" href="/">Back home</a>
+        </div>
+      </form>
+    </section>
+  </div>
+{% endblock %}

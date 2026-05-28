@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Notes{% endblock %}
+
+{% block content %}
+  <section class="dashboard-hero">
+    <div class="dashboard-hero__profile">
+      <div class="profile-avatar profile-avatar--large">{{ display_name[:1]|upper }}</div>
+      <div>
+        <p class="eyebrow">Student dashboard</p>
+        <h1>{{ display_name }}</h1>
+        <p class="muted">
+          {{ user.email }}
+          {% if user.department %} · {{ user.department }}{% endif %}
+          {% if user.college %} · {{ user.college }}{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="button" href="/upload">Upload PDF</a>
+      <a class="button button--secondary" href="/profile">Edit profile</a>
+    </div>
+  </section>
+
+  <section class="stats-grid" aria-label="Dashboard summary">
+    <div class="stat-card">
+      <span class="stat-card__value">{{ dashboard_stats.notes }}</span>
+      <span class="stat-card__label">Total notes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">{{ dashboard_stats.departments }}</span>
+      <span class="stat-card__label">Departments</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">{{ dashboard_stats.subjects }}</span>
+      <span class="stat-card__label">Subjects</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">{{ dashboard_stats.units }}</span>
+      <span class="stat-card__label">Units</span>
+    </div>
+  </section>
+
+  {% if notes|length == 0 %}
+    <section class="empty-state">
+      <h2>No notes yet</h2>
+      <p class="muted">Upload your first PDF and tag it by department, subject, and unit.</p>
+      <a class="button" href="/upload">Upload notes</a>
+    </section>
+  {% else %}
+    <div class="dashboard-layout">
+      <section class="dashboard-main">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Library</p>
+            <h2>Department notes</h2>
+          </div>
+        </div>
+
+        <div class="department-stack">
+          {% for department in dashboard_groups %}
+            <section class="department-block">
+              <div class="department-block__head">
+                <div>
+                  <h3>{{ department.name }}</h3>
+                  <p class="muted">{{ department.count }} note{{ "" if department.count == 1 else "s" }}</p>
+                </div>
+              </div>
+
+              <div class="subject-grid">
+                {% for subject in department.subjects %}
+                  <div class="subject-panel">
+                    <div class="subject-panel__head">
+                      <h4>{{ subject.name }}</h4>
+                      <span class="count-pill">{{ subject.count }}</span>
+                    </div>
+
+                    <div class="unit-stack">
+                      {% for unit in subject.units %}
+                        <details class="unit-panel" open>
+                          <summary>
+                            <span>{{ unit.name }}</span>
+                            <span class="muted">{{ unit.count }} note{{ "" if unit.count == 1 else "s" }}</span>
+                          </summary>
+                          <div class="unit-notes">
+                            {% for note in unit.notes %}
+                              <a class="note-row" href="/notes/{{ note.id }}">
+                                <span>
+                                  <strong>{{ note.title }}</strong>
+                                  <small>{{ note.original_filename }}</small>
+                                </span>
+                                <small>{{ note.uploaded_at.strftime("%Y-%m-%d") if note.uploaded_at else "" }}</small>
+                              </a>
+                            {% endfor %}
+                          </div>
+                        </details>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </section>
+          {% endfor %}
+        </div>
+      </section>
+
+      <aside class="dashboard-side">
+        <section class="side-panel">
+          <div class="section-head section-head--compact">
+            <div>
+              <p class="eyebrow">Activity</p>
+              <h2>Recent uploads</h2>
+            </div>
+          </div>
+          <div class="recent-list">
+            {% for note in recent_notes %}
+              <a class="recent-item" href="/notes/{{ note.id }}">
+                <strong>{{ note.title }}</strong>
+                <span class="muted">
+                  {{ note.subject_name or "Unsorted subject" }} · {{ note.unit_name or "Unsorted unit" }}
+                </span>
+              </a>
+            {% endfor %}
+          </div>
+        </section>
+      </aside>
+    </div>
+  {% endif %}
+{% endblock %}

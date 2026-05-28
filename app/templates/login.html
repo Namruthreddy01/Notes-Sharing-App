@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Login · Notes{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h1>Login</h1>
+    <p class="muted">Welcome back.</p>
+
+    {% if error %}
+      <div class="alert alert--error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/login" class="form">
+      <label class="label">
+        Email
+        <input class="input" type="email" name="email" autocomplete="email" required />
+      </label>
+
+      <label class="label">
+        Password
+        <input class="input" type="password" name="password" autocomplete="current-password" required />
+      </label>
+
+      <input type="hidden" name="next" value="{{ next or '/' }}" />
+
+      <button class="button" type="submit">Login</button>
+    </form>
+
+    <p class="muted">
+      New here? <a href="/signup">Create an account</a>.
+    </p>
+  </div>
+{% endblock %}
